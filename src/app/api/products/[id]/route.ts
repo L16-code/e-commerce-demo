@@ -1,19 +1,25 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// Using Next.js 15 App Router pattern for dynamic routes
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+/**
+ * Handle GET request for a single product
+ * @param _request The request object (unused)
+ * @param params The route parameters containing the product ID
+ */
+export async function GET(_request: Request, { params }: { params: { id: string } }) {
+  // Get the product ID from the route parameters
+  const id = params.id;
+  
   try {
-    const id = params.id;
-    
     // Fetch product by ID
     const product = await prisma.product.findUnique({
-      where: { id }
+      where: { id },
+      include: {
+        variants: true // Include all variants
+      }
     });
     
+    // Return 404 if product not found
     if (!product) {
       return NextResponse.json(
         { message: 'Product not found' },
