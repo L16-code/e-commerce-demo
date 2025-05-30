@@ -1,15 +1,12 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
+type RouteParams = { params: { id: string } };
 
-export async function GET(request: Request, { params }: Params) {
+// Using Next.js 15 App Router pattern for dynamic routes
+export async function GET(request: Request, context: RouteParams) {
   try {
-    const { id } = params;
+    const id = context.params.id;
     
     // Fetch product by ID
     const product = await prisma.product.findUnique({
