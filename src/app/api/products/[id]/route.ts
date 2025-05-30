@@ -1,14 +1,19 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+// Define the interface for the context parameter with dynamic route parameters
+interface RouteContext {
+  params: {
+    id: string;
+  }
+}
+
 /**
- * Handle GET request for a single product
- * @param _request The request object (unused)
- * @param params The route parameters containing the product ID
+ * Get a product by ID
  */
-export async function GET(_request: Request, { params }: { params: { id: string } }) {
-  // Get the product ID from the route parameters
-  const id = params.id;
+export async function GET(_request: Request, context: RouteContext) {
+  // Extract product ID
+  const id = context.params.id;
   
   try {
     // Fetch product by ID
