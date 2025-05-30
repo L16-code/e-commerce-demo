@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Product model
+model Product {
+  id          String    @id @default(uuid())
+  name        String
+  description String
+  price       Float
+  image       String
+  inventory   Int       @default(10)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  variants    Variant[]
+  orderItems  OrderItem[]
+}
+
+// Variant model for product options (color, size, etc.)
+model Variant {
+  id        String   @id @default(uuid())
+  name      String
+  type      String   // e.g., 'color', 'size'
+  value     String   // e.g., 'red', 'XL'
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  orderItems OrderItem[]
+}
+
+// Order model
+model Order {
+  id               String      @id @default(uuid())
+  orderNumber      String      @unique
+  customerId       String
+  customer         Customer    @relation(fields: [customerId], references: [id])
+  items            OrderItem[]
+  subtotal         Float
+  total            Float
+  status           String      // 'approved', 'declined', 'failed'
+  transactionId    String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+// OrderItem model for items in an order
+model OrderItem {
+  id         String   @id @default(uuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id])
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  variantId  String?
+  variant    Variant? @relation(fields: [variantId], references: [id])
+  quantity   Int
+  price      Float
+  totalPrice Float
+}
+
+// Customer model
+model Customer {
+  id         String   @id @default(uuid())
+  fullName   String
+  email      String
+  phone      String
+  address    String
+  city       String
+  state      String
+  zipCode    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  orders     Order[]
+}

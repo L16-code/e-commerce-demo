@@ -3,6 +3,25 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --card-bg: #f8f9fa;
+  --header-bg: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --button-bg: #3b82f6;
+  --button-hover: #2563eb;
+  --button-text: #ffffff;
+  --border-color: #e5e7eb;
+}
+
+.dark-theme {
+  --background: #121212;
+  --foreground: #f8f9fa;
+  --card-bg: #1e1e1e;
+  --header-bg: #1a1a1a;
+  --shadow: rgba(0, 0, 0, 0.5);
+  --button-bg: #3b82f6;
+  --button-hover: #60a5fa;
+  --button-text: #ffffff;
+  --border-color: #2d2d2d;
 }
 
 @theme inline {
@@ -12,15 +31,38 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Apply theme colors to common components */
+.card {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.header {
+  background-color: var(--header-bg);
+  border-color: var(--border-color);
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+/* Support dark mode for Tailwind classes */
+.dark-theme .bg-white {
+  background-color: var(--card-bg) !important;
+}
+
+.dark-theme .text-gray-600 {
+  color: #a0aec0 !important;
+}
+
+.dark-theme .border {
+  border-color: var(--border-color) !important;
+}
+
+.dark-theme .shadow {
+  box-shadow: 0 1px 3px var(--shadow) !important;
 }
